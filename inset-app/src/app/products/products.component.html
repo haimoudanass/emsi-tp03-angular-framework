@@ -1,0 +1,169 @@
+<div class="container mt-3">
+  <div class="card shadow-sm mb-3">
+    <div class="card-header bg-success text-white">
+      <h2 class="h5 mb-0">Ajouter un produit</h2>
+    </div>
+    <div class="card-body">
+      <form (ngSubmit)="handleAddProduct()" novalidate>
+        <div class="row g-3 align-items-end">
+          <div class="col-md-4">
+            <label class="form-label" for="product-name">Nom</label>
+            <input
+              id="product-name"
+              type="text"
+              class="form-control"
+              name="name"
+              [(ngModel)]="newProduct.name"
+              [disabled]="submitting"
+              required
+            />
+          </div>
+          <div class="col-md-3">
+            <label class="form-label" for="product-price">Prix</label>
+            <input
+              id="product-price"
+              type="number"
+              class="form-control"
+              name="price"
+              [(ngModel)]="newProduct.price"
+              [disabled]="submitting"
+              min="0.01"
+              step="0.01"
+              required
+            />
+          </div>
+          <div class="col-md-3">
+            <div class="form-check mt-4">
+              <input
+                id="product-selected"
+                class="form-check-input"
+                type="checkbox"
+                name="selected"
+                [(ngModel)]="newProduct.selected"
+                [disabled]="submitting"
+              />
+              <label class="form-check-label" for="product-selected">Sélectionné</label>
+            </div>
+          </div>
+          <div class="col-md-2">
+            <button type="submit" class="btn btn-success w-100" [disabled]="submitting">
+              @if (submitting) {
+                Ajout...
+              } @else {
+                <i class="bi bi-plus-circle"></i> Ajouter
+              }
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="card shadow-sm">
+    <div class="card-header bg-primary text-white d-flex flex-wrap justify-content-between align-items-center gap-2">
+      <h1 class="h4 mb-0">Liste des Produits</h1>
+      <div class="btn-group btn-group-sm" role="group" aria-label="Filtre produits">
+        <button
+          type="button"
+          class="btn"
+          [class.btn-light]="filter === 'all'"
+          [class.btn-outline-light]="filter !== 'all'"
+          (click)="filter = 'all'"
+        >
+          Tous
+        </button>
+        <button
+          type="button"
+          class="btn"
+          [class.btn-light]="filter === 'selected'"
+          [class.btn-outline-light]="filter !== 'selected'"
+          (click)="filter = 'selected'"
+        >
+          Sélectionnés
+        </button>
+        <button
+          type="button"
+          class="btn"
+          [class.btn-light]="filter === 'unselected'"
+          [class.btn-outline-light]="filter !== 'unselected'"
+          (click)="filter = 'unselected'"
+        >
+          Non sélectionnés
+        </button>
+      </div>
+    </div>
+    <div class="card-body">
+      @if (successMessage) {
+        <div class="alert alert-success" role="alert">
+          {{ successMessage }}
+        </div>
+      }
+
+      @if (errorMessage) {
+        <div class="alert alert-danger" role="alert">
+          {{ errorMessage }}
+        </div>
+      }
+
+      @if (products) {
+        @if (products.length === 0) {
+          <p class="mb-0">Aucun produit disponible</p>
+        } @else if (filteredProducts.length === 0) {
+          <p class="mb-0">Aucun produit ne correspond au filtre sélectionné.</p>
+        } @else {
+          <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+              <thead class="table-light">
+                <tr>
+                  <th scope="col">ID</th>
+                  <th scope="col">Nom</th>
+                  <th scope="col">Prix</th>
+                  <th scope="col">Statut</th>
+                  <th scope="col">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (p of filteredProducts; track p.id) {
+                  <tr>
+                    <td>{{ p.id }}</td>
+                    <td>{{ p.name }}</td>
+                    <td>{{ p.price | currency:'EUR' }}</td>
+                    <td>
+                      @if (p.selected) {
+                        <span class="badge text-bg-success">
+                          <i class="bi bi-check-circle-fill"></i> Sélectionné
+                        </span>
+                      } @else {
+                        <span class="badge text-bg-secondary">
+                          <i class="bi bi-circle"></i> Non sélectionné
+                        </span>
+                      }
+                    </td>
+                    <td class="text-nowrap">
+                      <button
+                        type="button"
+                        class="btn btn-outline-secondary btn-sm me-2"
+                        (click)="handleToggleSelected(p)"
+                      >
+                        @if (p.selected) {
+                          <i class="bi bi-toggle-on"></i> Désélectionner
+                        } @else {
+                          <i class="bi bi-toggle-off"></i> Sélectionner
+                        }
+                      </button>
+                      <button type="button" class="btn btn-outline-danger btn-sm" (click)="handleDelete(p)">
+                        <i class="bi bi-trash"></i> Supprimer
+                      </button>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+      } @else {
+        <p class="mb-0">Chargement du catalogue en cours...</p>
+      }
+    </div>
+  </div>
+</div>

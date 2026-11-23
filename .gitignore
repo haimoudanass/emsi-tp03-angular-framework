@@ -1,0 +1,33 @@
+# === Java / Maven ===
+**/target/
+*.class
+*.jar
+*.war
+*.log
+*.err
+
+# === Angular ===
+inset-app/node_modules/
+inset-app/dist/
+inset-app/.angular/
+inset-app/tmp/
+inset-app/out-tsc/
+inset-app/coverage/
+
+# === Outils portables locaux (JDK / Maven) — ne pas publier ===
+.tools/
+
+# === Environnement ===
+.env
+.env.*
+!.env.example
+
+# === IDE ===
+.idea/
+*.iml
+.classpath
+.project
+.settings/
+.vscode/
+.DS_Store
+Thumbs.db
